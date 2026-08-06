@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network Marketing | Grow Your Business Online</title>
+<meta name="description" content="Online advertising, social media management and SEO services that turn attention into measurable business growth.">
+<meta property="og:title" content="Network Marketing | Grow Your Business Online">
+<meta property="og:description" content="Advertising, social media and SEO services built for measurable growth.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="dxn-auto-reply/chat.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html"><span>Network</span> Marketing</a>
+    <nav class="nav">
+      <ul>
+        <li><a class="active" href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Marketing Services</a></li>
+      </ul>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">&#9776;</button>
+  </div>
+  <nav class="nav-mobile" id="navMobile">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="services.html">Marketing Services</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <img src="images/hero.jpg" alt="Marketing team reviewing campaign performance dashboards" width="1920" height="1088">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="container">
+      <p class="eyebrow">Data driven &middot; Results obsessed</p>
+      <h1>Network Marketing Solutions</h1>
+      <p>We provide digital marketing services, online advertising, social media management, and strategies that help businesses grow.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="services.html">Explore services</a>
+        <a class="btn btn-ghost" href="about.html">About us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="container">
+    <h2>Get Digital Marketing Updates</h2>
+    <form id="subscribeForm">
+  <input type="text" id="name" placeholder="الاسم" required>
+
+  <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+
+  <input type="tel" id="phone" placeholder="رقم واتساب" required>
+
+  <button type="submit">تسجيل</button>
+</form>
+  </div>
+</section>
+
+<section class="section">
+  <h2>What we do</h2>
+  <p class="lead">Three services, one goal: more of the right people finding your business.</p>
+  <div class="cards">
+    <article class="card">
+      <img src="images/ads.png" alt="" width="512" height="512" loading="lazy">
+      <h3>Online Advertising</h3>
+      <p>Professional online advertising campaigns to reach the right customers and grow your business.</p>
+    </article>
+    <article class="card">
+      <img src="images/social.png" alt="" width="512" height="512" loading="lazy">
+      <h3>Social Media Marketing</h3>
+      <p>Social media strategies that increase engagement and build a strong online presence.</p>
+    </article>
+    <article class="card">
+      <img src="images/seo.png" alt="" width="512" height="512" loading="lazy">
+      <h3>SEO Optimization</h3>
+      <p>SEO services that improve your visibility and attract more visitors from search engines.</p>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer"><p>Network Marketing, Copyright &copy; 2026</p></footer>
+<script>
+document.getElementById('menuBtn').addEventListener('click',function(){
+  document.getElementById('navMobile').classList.toggle('open');
+});
+</script>
+<div class="chat-box" id="chatBox">
+  <div class="chat-header">
+    مساعد التسويق
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="bot-message">
+        مرحبًا بك 👋<br>
+        اكتب سؤالك عن DXN وسأجيبك.
+    </div>
+</div>
+
+  <div class="chat-input">
+    <input id="userMessage" type="text" placeholder="اكتب سؤالك...">
+    <button onclick="sendMessage()">إرسال</button>
+  </div>
+  <div class="social-buttons">
+    <a class="facebook" href="#" target="_blank">Facebook</a>
+    <a class="whatsapp" href="#" target="_blank">WhatsApp</a>
+    <a class="instagram" href="#" target="_blank">Instagram</a>
+  </div>
+</div>
+
+<button class="chat-button" onclick="openChat()">💬</button>
+
+<script src="dxn-auto-reply/chat.js"></script>
+<script>
+function openChat() {
+  var box = document.getElementById("chatBox");
+  if (box.style.display === "block") {
+    box.style.display = "none";
+  } else {
+    box.style.display = "block";
+  }
+}
+</script>
+</body>
+</html>

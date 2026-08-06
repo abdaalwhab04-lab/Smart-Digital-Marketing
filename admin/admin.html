@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم — إدارة الردود الآلية</title>
+<meta name="description" content="إدارة الأسئلة والأجوبة والكلمات المفتاحية ومزامنة قاعدة البيانات مع Google Sheets.">
+<style>
+body{font-family:Tahoma,Arial;background:#f1f4f8;padding:20px;margin:0}
+.container{max-width:900px;margin:auto}
+h1{text-align:center;color:#1d4f91}
+.card{background:#fff;padding:20px;margin-bottom:20px;border-radius:15px;box-shadow:0 3px 10px #ddd}
+h2{color:#333;margin-top:0}
+input,textarea,select{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
+textarea{height:110px}
+button{background:#1d75d1;color:#fff;border:0;padding:12px 20px;border-radius:8px;cursor:pointer}
+button:hover{background:#12549c}
+.item{background:#eef6ff;padding:12px;margin-top:10px;border-radius:10px}
+.item small{color:#1d4f91}
+.del{background:#e74c3c;padding:6px 12px;font-size:13px;float:left}
+.small{color:#777;font-size:13px}
+nav a{color:#1d4f91;margin-left:12px;text-decoration:none;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="container">
+
+<nav><a href="../index.html">الموقع</a><a href="../dxn-auto-reply/index.html">المحادثة</a><a href="../ai-assistant/index.html">الذكاء الاصطناعي</a><a href="admin_old.html">النسخة القديمة</a></nav>
+
+<h1>🛠️ لوحة التحكم</h1>
+
+<div class="card">
+  <h2>📊 قاعدة بيانات Google Sheets</h2>
+  <p class="small" id="status">اضغط «مزامنة الآن» لتحميل الأسئلة من الرابط المنشور.</p>
+  <button onclick="sync()">🔄 مزامنة الآن</button>
+</div>
+
+<div class="card">
+  <h2>➕ إضافة سؤال وجواب</h2>
+  <input id="q" placeholder="السؤال">
+  <textarea id="a" placeholder="الإجابة"></textarea>
+  <input id="k" placeholder="الكلمات المفتاحية (مفصولة بفاصلة)">
+  <label class="small"><input type="checkbox" id="w" style="width:auto"> إظهار زر واتساب مع هذا الرد</label>
+  <button onclick="addItem()">حفظ السؤال</button>
+</div>
+
+<div class="card">
+  <h2>📋 الأسئلة المضافة يدويًا</h2>
+  <div id="list"></div>
+</div>
+
+</div>
+
+<script>
+const SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1LQ_-JgJg-zlEowfuJl4SKpsvw0hhazcmI68F-gP5NNE/gviz/tq?tqx=out:csv";
+
+function load(){ try{ return JSON.parse(localStorage.getItem("botQuestions")) || []; }catch{ return []; } }
+function save(list){ localStorage.setItem("botQuestions", JSON.stringify(list)); show(); }
+
+function addItem(){
+  const question = q.value.trim(), answer = a.value.trim();
+  if(!question || !answer){ alert("الرجاء إدخال السؤال والإجابة"); return; }
+  const list = load();
+  list.unshift({
+    question, answer,
+    keywords: k.value.split(/[،,]/).map(s=>s.trim()).filter(Boolean),
+    whatsapp: w.checked
+  });
+  save(list);
+  q.value=""; a.value=""; k.value=""; w.checked=false;
+}
+
+function remove(i){ const list = load(); list.splice(i,1); save(list); }
+
+function show(){
+  const list = load();
+  list_el = document.getElementById("list");
+  list_el.innerHTML = list.length ? list.map((item,i)=>`
+    <div class="item">
+      <button class="del" onclick="remove(${i})">حذف</button>
+      <b>${item.question}</b><br>${item.answer}
+      ${item.keywords && item.keywords.length ? `<br><small>${item.keywords.join(" • ")}</small>` : ""}
+      ${item.whatsapp ? "<br><small>📱 مع زر واتساب</small>" : ""}
+    </div>`).join("") : '<p class="small">لا توجد أسئلة مضافة بعد.</p>';
+}
+
+async function sync(){
+  document.getElementById("status").innerText = "جارٍ التحميل…";
+  try{
+    const res = await fetch(SHEET_CSV_URL);
+    const text = await res.text();
+    const rows = text.split("\n").filter(r=>r.trim());
+    document.getElementById("status").innerText =
+      "تم الاتصال بنجاح ✅ عدد الصفوف: " + Math.max(rows.length-1,0) +
+      " — يتم تحميلها تلقائيًا داخل المحادثة.";
+  }catch(e){
+    document.getElementById("status").innerText = "تعذر تحميل البيانات من Google Sheets ❌";
+  }
+}
+
+show();
+</script>
+</body>
+</html>

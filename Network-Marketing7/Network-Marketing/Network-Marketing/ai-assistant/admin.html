@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Marketing Assistant - Admin</title>
+
+<style>
+body{
+    font-family:Tahoma,Arial;
+    background:#f1f4f8;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    color:#1d4f91;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:15px;
+    box-shadow:0 3px 10px #ccc;
+}
+
+h2{
+    color:#333;
+}
+
+input,textarea,select{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+textarea{
+    height:120px;
+}
+
+button{
+    background:#1d75d1;
+    color:white;
+    border:0;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#12549c;
+}
+
+.item{
+    background:#eef6ff;
+    padding:12px;
+    margin-top:10px;
+    border-radius:10px;
+}
+
+.small{
+    color:#777;
+    font-size:14px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 Smart Marketing Assistant</h1>
+
+
+<div class="card">
+
+<h2>🏢 إضافة شركة</h2>
+
+<input id="company" placeholder="اسم الشركة">
+
+<textarea id="companyInfo"
+placeholder="وصف الشركة"></textarea>
+
+<button onclick="addCompany()">
+حفظ الشركة
+</button>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>📁 إضافة قسم</h2>
+
+<input id="section"
+placeholder="اسم القسم">
+
+<button onclick="addSection()">
+حفظ القسم
+</button>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>❓ إضافة سؤال وإجابة</h2>
+
+
+<h2>❓ إضافة سؤال وإجابة</h2>
+
+<label>الشركة</label>
+<select id="companySelect">
+<option>DXN</option>
+</select>
+
+<label>القسم</label>
+<input id="sectionSelect"
+placeholder="مثال: المنتجات">
+
+<label>السؤال</label>
+<input id="question"
+placeholder="السؤال">
+
+
+<textarea id="answer"
+maxlength="500"
+placeholder="الإجابة (500 حرف)"></textarea>
+
+<div class="small">
+الأحرف:
+<span id="counter">0</span>/500
+</div>
+
+
+<input id="keywords"
+placeholder="الكلمات المفتاحية">
+
+<label>إظهار التواصل</label>
+
+<select id="showContact">
+
+<option value="نعم">نعم</option>
+
+<option value="لا">لا</option>
+
+</select>
+
+<button onclick="addQuestion()">
+حفظ السؤال
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>📞 بيانات التواصل</h2>
+
+
+<input id="sponsor"
+value="829134401"
+placeholder="رمز الراعي">
+
+
+<input id="registerLink"
+value="https://eworld.dxn2u.com/s/accreg/ar/829134401"
+placeholder="رابط التسجيل">
+
+
+<input id="whatsapp"
+value="+218946098624"
+placeholder="واتساب">
+
+
+<button onclick="saveContact()">
+حفظ التواصل
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>📋 المحتوى المحفوظ</h2>
+
+<div id="list"></div>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+let db =
+JSON.parse(localStorage.getItem("SMA"))
+||
+{
+companies:[],
+sections:[],
+questions:[],
+contact:{}
+};
+
+
+
+function save(){
+
+localStorage.setItem(
+"SMA",
+JSON.stringify(db)
+);
+
+show();
+
+}
+
+
+
+
+function addCompany(){
+
+db.companies.push({
+
+name:company.value,
+
+info:companyInfo.value
+
+});
+
+save();
+
+alert("تم حفظ الشركة");
+
+}
+
+
+
+
+function addSection(){
+
+db.sections.push(
+section.value
+);
+
+save();
+
+alert("تم حفظ القسم");
+
+}
+
+
+
+
+function addQuestion(){
+
+db.questions.push({
+
+company:companySelect.value,
+
+section:sectionSelect.value,
+
+question:question.value,
+
+answer:answer.value,
+
+keywords:keywords.value,
+
+showContact:showContact.value
+
+});
+
+
+save();
+
+alert("تم حفظ السؤال");
+
+
+}
+
+
+
+
+function saveContact(){
+
+db.contact={
+
+sponsor:sponsor.value,
+
+link:registerLink.value,
+
+whatsapp:whatsapp.value
+
+};
+
+
+save();
+
+alert("تم حفظ بيانات التواصل");
+
+}
+
+
+
+
+function show(){
+
+let html="";
+
+
+db.questions.forEach(q=>{
+
+html+=`
+
+<div class="item">
+
+<b>${q.question}</b>
+
+<br>
+
+${q.answer}
+
+<br>
+
+<span class="small">
+
+الكلمات:
+${q.keywords}
+
+</span>
+
+</div>
+
+`;
+
+});
+
+
+list.innerHTML=html;
+
+
+}
+
+
+
+answer.oninput=function(){
+
+counter.innerText=this.value.length;
+
+}
+
+
+
+show();
+
+
+</script>
+
+
+</body>
+</html>

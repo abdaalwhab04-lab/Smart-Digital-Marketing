@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مساعد DXN الذكي — الرد التلقائي</title>
+<meta name="description" content="مساعد ذكي للرد الفوري على أسئلة عملاء DXN حول المنتجات والتسجيل وفرصة العمل.">
+<link rel="stylesheet" href="chat.css">
+</head>
+
+<body>
+
+<div class="chat-container">
+
+  <h2>🤖 مساعد DXN الذكي</h2>
+
+  <div class="quick-replies">
+    <button type="button" onclick="quickAsk('كيف أسجل في DXN؟')">التسجيل</button>
+    <button type="button" onclick="quickAsk('ما هي منتجات DXN؟')">المنتجات</button>
+    <button type="button" onclick="quickAsk('ما هي فرصة العمل في DXN؟')">فرصة العمل</button>
+    <button type="button" onclick="quickAsk('ما هو التسويق الشبكي؟')">التسويق الشبكي</button>
+    <button type="button" onclick="quickAsk('كيف أتواصل مع الفريق؟')">التواصل</button>
+  </div>
+
+  <div id="chat-box">
+    <div class="bot-message">
+      مرحبًا بك 👋<br>
+      أنا المساعد الذكي لصفحة DXN. أستطيع مساعدتك في المنتجات، التسجيل، فرصة العمل والتسويق الشبكي.
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="user-input" placeholder="اكتب سؤالك هنا...">
+    <button type="button" onclick="sendMessage()">إرسال</button>
+  </div>
+
+</div>
+
+<script src="chat.js"></script>
+
+</body>
+</html>
