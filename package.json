@@ -1,0 +1,13 @@
+{
+  "name": "smart-digital-marketing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "import-sheet": "node scripts/import-sheet.js",
+    "preview": "node -e \"const http=require('http'); const fs=require('fs'); const path=require('path'); const serve=(req,res)=>{let p='.'+ (req.url==='/'?'/index.html':req.url); const full=path.resolve(p); fs.readFile(full,(e,d)=>{if(e){res.statusCode=404; res.end('Not found');}else{res.end(d);}})}; http.createServer(serve).listen(8000); console.log('Preview server http://localhost:8000')\""
+  },
+  "dependencies": {
+    "node-fetch": "^3.4.0"
+  }
+}
