@@ -1,0 +1,4 @@
+ls -la | grep .gitignore
+nano .gitignore
+.ai-agent/
+
