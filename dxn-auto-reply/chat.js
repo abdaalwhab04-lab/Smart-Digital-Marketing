@@ -94,33 +94,7 @@ async function loadKnowledge() {
 
 loadKnowledge();
 
-/* ---------- البحث الذكي ---------- */
-function score(query, item) {
-  const q = normalize(query);
-  const qq = normalize(item.question);
-  if (!q || !qq) return 0;
-  let s = 0;
-  if (q === qq) s += 100;
-  if (qq.includes(q) || q.includes(qq)) s += 40;
-  const qt = tokens(query);
-  const it = new Set(tokens(item.question));
-  qt.forEach((t) => { if (it.has(t)) s += 6; });
-  (item.keywords || []).forEach((k) => {
-    const nk = normalize(k);
-    if (nk && q.includes(nk)) s += 12;
-    else if (tokens(k).some((t) => qt.includes(t))) s += 4;
-  });
-  return s;
-}
 
-function findAnswer(query) {
-  let best = null, bestScore = 0;
-  answers.forEach((item) => {
-    const s = score(query, item);
-    if (s > bestScore) { bestScore = s; best = item; }
-  });
-  return bestScore >= 12 ? best : null;
-}
 
 /* ---------- الواجهة ---------- */
 function messagesBox() {
@@ -161,7 +135,7 @@ function sendMessage() {
   input.value = "";
 
   setTimeout(() => {
-    const match = findAnswer(text);
+    const match = findAnswer(text, answers);
     if (match) {
       let html = escapeHtml(match.answer).replace(/\n/g, "<br>");
       if (match.whatsapp) html += "<br>" + whatsappButton("سؤالي: " + text);
