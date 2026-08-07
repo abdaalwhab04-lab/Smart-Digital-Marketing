@@ -138,16 +138,25 @@ function sendMessage() {
   setTimeout(() => {
     const match = findAnswer(text, answers);
     if (match) {
-      let html = escapeHtml(match.answer).replace(/\n/g, "<br>");
-      if (match.whatsapp) html += "<br>" + whatsappButton("سؤالي: " + text);
-      addMessage(html, "bot-message");
-    } else {
-      addMessage(
-        "لم أجد إجابة دقيقة لهذا السؤال 🙏<br>يمكنك إعادة صياغته أو التواصل مع الفريق مباشرة.<br>" +
-          whatsappButton("سؤالي: " + text),
-        "bot-message",
-      );
-    }
+  let html = escapeHtml(match.answer).replace(/\n/g, "<br>");
+  if (match.whatsapp) html += "<br>" + whatsappButton("سؤالي: " + text);
+  addMessage(html, "bot-message");
+} else {
+  const geminiAnswer = await askGemini(text);
+
+  if (geminiAnswer) {
+    addMessage(
+      escapeHtml(geminiAnswer).replace(/\n/g, "<br>"),
+      "bot-message"
+    );
+  } else {
+    addMessage(
+      "لم أجد إجابة دقيقة لهذا السؤال 🙏<br>يمكنك إعادة صياغته أو التواصل مع الفريق مباشرة.<br>" +
+        whatsappButton("سؤالي: " + text),
+      "bot-message",
+    );
+  }
+}
   }, 300);
 }
 
