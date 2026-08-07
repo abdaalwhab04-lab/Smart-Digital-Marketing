@@ -8,28 +8,9 @@ function scoreAnswer(userText, item) {
 
   let score = 0;
 
-  const importantWords = new Set([
-    "dxn",
-    "تسجيل",
-    "عضويه",
-    "عضوية",
-    "منتج",
-    "منتجات",
-    "ربح",
-    "عمل",
-    "اشتراك"
-  ]);
-
   userTokens.forEach((word) => {
     if (questionTokens.includes(word)) score += 3;
-
-    if (keywordTokens.includes(word)) {
-      score += importantWords.has(word) ? 8 : 5;
-    }
-
-    if (importantWords.has(word)) {
-      score += 2;
-    }
+    if (keywordTokens.includes(word)) score += 5;
   });
 
   return score;
