@@ -333,28 +333,6 @@ function findAnswer(text, list) {
     }
   }
 
-  function findAnswer(text, list) {
-  const normalized =
-    text.trim().toLowerCase();
-
-  if (!normalized) {
-    return null;
-  }
-
-  /* تطابق السؤال بالكامل فقط */
-  for (const item of list) {
-    const q =
-      (item.question || "")
-        .trim()
-        .toLowerCase();
-
-    if (q && normalized === q) {
-      return item;
-    }
-  }
-
-  return null;
-}
 
   return null;
 }
