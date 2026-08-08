@@ -4,6 +4,8 @@ import http from "http";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { loadKnowledge } from "../dxn-chat-core/knowledge.js";
+import DXN_CONFIG from "../config/dxn.config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,35 +16,19 @@ const HOST = "0.0.0.0";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-3.6-flash";
 
-function loadKnowledge() {
-  try {
-    const filePath = path.join(
-      __dirname,
-      "..",
-      "dxn-auto-reply",
-      "questions.json"
-    );
 
-    const data = fs.readFileSync(filePath, "utf8");
-    const questions = JSON.parse(data);
-
-    if (!Array.isArray(questions)) {
-      return [];
-    }
-
-    return questions;
-  } catch (error) {
-    console.error("Knowledge loading error:", error);
-    return [];
-  }
-}
-
-function buildKnowledgeContext() {
-  const knowledge = loadKnowledge();
+async function buildKnowledgeContext() {
+  const knowledge = await loadKnowledge({
+    sheetUrl: DXN_CONFIG.sheetUrl
+  });
 
   if (!knowledge.length) {
-    return "لا توجد قاعدة معرفة محلية متاحة.";
+    return "لا توجد قاعدة معرفة متاحة.";
   }
+
+  console.log(
+    `Knowledge loaded: ${knowledge.length} questions`
+  );
 
   return knowledge
     .map((item, index) => {
@@ -58,7 +44,7 @@ async function askGemini(question, company, section) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
 
-  const knowledgeContext = buildKnowledgeContext();
+  const knowledgeContext = await buildKnowledgeContext();
 
   const prompt = `
 أنت المساعد التسويقي الذكي لموقع Smart Digital Marketing والمتخصص في شركة DXN.
