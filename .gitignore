@@ -1,4 +1,17 @@
 ls -la | grep .gitignore
 nano .gitignore
 .ai-agent/
+# AI / Gemini secrets
+.env
+.env.*
+!.env.example
 
+# Local AI backups
+ai.backup-*/
+
+# API backups
+api/*.backup-*
+# Phase backups
+ai/*.backup-*
+dxn-auto-reply/*.backup-*
+api/*.backup-*
