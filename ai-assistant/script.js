@@ -2,9 +2,13 @@ const GEMINI_API_URL =
   "https://smart-digital-marketing.onrender.com/api/gemini";
 
 async function search() {
+  const companyInput = document.getElementById("company");
+  const sectionInput = document.getElementById("section");
   const questionInput = document.getElementById("question");
   const answerBox = document.getElementById("answer");
 
+  const company = companyInput ? companyInput.value.trim() : "DXN";
+  const section = sectionInput ? sectionInput.value.trim() : "عام";
   const question = questionInput.value.trim();
 
   if (!question) {
@@ -21,7 +25,9 @@ async function search() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        question: question
+        company,
+        section,
+        question
       })
     });
 
@@ -29,7 +35,7 @@ async function search() {
 
     if (!response.ok || !data.success) {
       throw new Error(
-        data.error || "حدث خطأ أثناء الاتصال بـ Gemini"
+        data.error || "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي"
       );
     }
 
@@ -42,3 +48,4 @@ async function search() {
       "تعذر الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.";
   }
 }
+
