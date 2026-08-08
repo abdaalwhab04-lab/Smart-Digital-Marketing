@@ -1,6 +1,12 @@
 /* Smart Digital Marketing - Gemini Backend */
 
 import http from "http";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = Number(process.env.PORT) || 8787;
 const HOST = "0.0.0.0";
@@ -8,29 +14,76 @@ const HOST = "0.0.0.0";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-3.6-flash";
 
+function loadKnowledge() {
+  try {
+    const filePath = path.join(
+      __dirname,
+      "..",
+      "dxn-auto-reply",
+      "questions.json"
+    );
+
+    const data = fs.readFileSync(filePath, "utf8");
+    const questions = JSON.parse(data);
+
+    if (!Array.isArray(questions)) {
+      return [];
+    }
+
+    return questions;
+  } catch (error) {
+    console.error("Knowledge loading error:", error);
+    return [];
+  }
+}
+
+function buildKnowledgeContext() {
+  const knowledge = loadKnowledge();
+
+  if (!knowledge.length) {
+    return "لا توجد قاعدة معرفة محلية متاحة.";
+  }
+
+  return knowledge
+    .map((item, index) => {
+      return `${index + 1}. السؤال: ${item.question || ""}
+الإجابة: ${item.answer || ""}
+الكلمات المفتاحية: ${(item.keywords || []).join(", ")}`;
+    })
+    .join("\n\n");
+}
+
 async function askGemini(question, company, section) {
   if (!GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
+
+  const knowledgeContext = buildKnowledgeContext();
 
   const prompt = `
 أنت المساعد التسويقي الذكي لموقع Smart Digital Marketing والمتخصص في شركة DXN.
 
 مهمتك:
 - أجب باللغة العربية الواضحة والبسيطة.
-- اجعل الإجابة مرتبطة بالشركة والقسم والسؤال.
+- اربط الإجابة بالشركة والقسم والسؤال عندما يكون ذلك مناسبًا.
 - إذا كان السؤال عن DXN، اجعل الإجابة مرتبطة بـDXN قدر الإمكان.
 - إذا كان السؤال عامًا في التسويق، أجب بطريقة عملية ومفيدة للمسوق.
+- استخدم قاعدة المعرفة المحلية كمصدر أساسي للمعلومات الموجودة فيها.
+- إذا لم تجد الإجابة في قاعدة المعرفة، استخدم معرفتك العامة لصياغة إجابة مفيدة.
 - لا تخترع أسعارًا أو نسب أرباح أو سياسات تسجيل غير مؤكدة.
-- لا تطل الإجابة بلا حاجة.
-- استخدم نقاطًا مختصرة عندما تكون مناسبة.
+- لا تخترع معلومات خاصة بشركة DXN غير موجودة في قاعدة المعرفة أو غير مؤكدة.
+- لا تقل للمستخدم إنك بحثت في قاعدة بيانات.
 - لا تذكر أنك نموذج ذكاء اصطناعي إلا إذا سُئلت مباشرة.
+- اجعل الإجابة مختصرة ومباشرة، واستخدم نقاطًا عند الحاجة.
 
 الشركة:
 ${company || "DXN"}
 
 القسم:
 ${section || "عام"}
+
+قاعدة المعرفة المحلية:
+${knowledgeContext}
 
 سؤال المستخدم:
 ${question}
@@ -69,11 +122,10 @@ ${question}
     );
   }
 
-  const answer =
-    data?.candidates?.[0]?.content?.parts
-      ?.map(part => part.text || "")
-      .join("")
-      .trim();
+  const answer = data?.candidates?.[0]?.content?.parts
+    ?.map(part => part.text || "")
+    .join("")
+    .trim();
 
   if (!answer) {
     throw new Error("Gemini returned an empty response");
@@ -109,7 +161,10 @@ const server = http.createServer((req, res) => {
     "application/json; charset=utf-8"
   );
 
-  if (req.method !== "POST" || req.url !== "/api/gemini") {
+  if (
+    req.method !== "POST" ||
+    req.url !== "/api/gemini"
+  ) {
     res.statusCode = 404;
 
     res.end(
