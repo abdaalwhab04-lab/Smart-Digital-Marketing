@@ -1,114 +1,44 @@
-let db =
-JSON.parse(localStorage.getItem("SMA"))
-||
-{
-questions:[]
-};
+const GEMINI_API_URL =
+  "https://smart-digital-marketing.onrender.com/api/gemini";
 
+async function search() {
+  const questionInput = document.getElementById("question");
+  const answerBox = document.getElementById("answer");
 
+  const question = questionInput.value.trim();
 
-function search(){
+  if (!question) {
+    answerBox.textContent = "اكتب سؤالك أولاً.";
+    return;
+  }
 
+  answerBox.textContent = "جاري التفكير...";
 
-let companyValue =
-company.value.toLowerCase();
+  try {
+    const response = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        question: question
+      })
+    });
 
+    const data = await response.json();
 
-let sectionValue =
-section.value.toLowerCase();
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "حدث خطأ أثناء الاتصال بـ Gemini"
+      );
+    }
 
+    answerBox.textContent = data.answer;
 
-let userQuestion =
-question.value.toLowerCase();
+  } catch (error) {
+    console.error("Gemini error:", error);
 
-
-let result =
-"لم أجد إجابة مناسبة.";
-
-
-
-db.questions.forEach(item=>{
-
-
-let itemCompany =
-(item.company || "").toLowerCase();
-
-
-let itemSection =
-(item.section || "").toLowerCase();
-
-
-let itemQuestion =
-item.question.toLowerCase();
-
-
-let keys =
-item.keywords.toLowerCase();
-
-
-
-if(
-
-itemCompany.includes(companyValue)
-
-&&
-
-itemSection.includes(sectionValue)
-
-&&
-
-(
-itemQuestion.includes(userQuestion)
-
-||
-
-keys.includes(userQuestion)
-
-)
-
-)
-
-{
-
-result = item.answer;
-
-
-if(item.showContact === "نعم"){
-
-result += `
-
-<br><br>
-
-📌 رمز الراعي: 829134401
-
-<br>
-
-🔗 رابط التسجيل:
-
-<a href="https://eworld.dxn2u.com/s/accreg/ar/829134401" target="_blank">
-اضغط هنا للتسجيل
-</a>
-
-<br><br>
-
-📱 واتساب:
-
-<a href="https://wa.me/218946098624" target="_blank">
-+218946098624
-</a>
-
-`;
-
-}
-
-}
-
-
-});
-
-
-
-answer.innerHTML=result;
-
-
+    answerBox.textContent =
+      "تعذر الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.";
+  }
 }
