@@ -333,25 +333,28 @@ function findAnswer(text, list) {
     }
   }
 
-  /* البحث بالكلمات المفتاحية */
+  function findAnswer(text, list) {
+  const normalized =
+    text.trim().toLowerCase();
+
+  if (!normalized) {
+    return null;
+  }
+
+  /* تطابق السؤال بالكامل فقط */
   for (const item of list) {
-    const keywords =
-      item.keywords || [];
+    const q =
+      (item.question || "")
+        .trim()
+        .toLowerCase();
 
-    for (const keyword of keywords) {
-      const k =
-        String(keyword)
-          .trim()
-          .toLowerCase();
-
-      if (
-        k &&
-        normalized.includes(k)
-      ) {
-        return item;
-      }
+    if (q && normalized === q) {
+      return item;
     }
   }
+
+  return null;
+}
 
   return null;
 }
