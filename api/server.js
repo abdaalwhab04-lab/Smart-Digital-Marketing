@@ -8,10 +8,33 @@ const HOST = "0.0.0.0";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-3.6-flash";
 
-async function askGemini(question) {
+async function askGemini(question, company, section) {
   if (!GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
+
+  const prompt = `
+أنت المساعد التسويقي الذكي لموقع Smart Digital Marketing والمتخصص في شركة DXN.
+
+مهمتك:
+- أجب باللغة العربية الواضحة والبسيطة.
+- اجعل الإجابة مرتبطة بالشركة والقسم والسؤال.
+- إذا كان السؤال عن DXN، اجعل الإجابة مرتبطة بـDXN قدر الإمكان.
+- إذا كان السؤال عامًا في التسويق، أجب بطريقة عملية ومفيدة للمسوق.
+- لا تخترع أسعارًا أو نسب أرباح أو سياسات تسجيل غير مؤكدة.
+- لا تطل الإجابة بلا حاجة.
+- استخدم نقاطًا مختصرة عندما تكون مناسبة.
+- لا تذكر أنك نموذج ذكاء اصطناعي إلا إذا سُئلت مباشرة.
+
+الشركة:
+${company || "DXN"}
+
+القسم:
+${section || "عام"}
+
+سؤال المستخدم:
+${question}
+`;
 
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
@@ -22,36 +45,17 @@ async function askGemini(question) {
         "x-goog-api-key": GEMINI_API_KEY
       },
       body: JSON.stringify({
-  contents: [
-    {
-      role: "user",
-      parts: [
-        {
-          text: `
-أنت المساعد التسويقي الذكي لموقع Smart Digital Marketing والمتخصص في شركة DXN.
-
-مهمتك:
-- أجب باللغة العربية الواضحة والبسيطة.
-- اجعل الإجابة مرتبطة بالسؤال والقسم المختار.
-- لا تخترع معلومات أو أسعارًا أو نسب أرباح أو سياسات تسجيل غير مؤكدة.
-- إذا كان السؤال عن DXN، اجعل الإجابة مرتبطة بـDXN قدر الإمكان.
-- إذا كان السؤال عامًا في التسويق، أجب عنه بطريقة عملية ومفيدة للمسوق.
-- لا تطل الإجابة بلا حاجة.
-- استخدم نقاطًا مختصرة عندما تكون مناسبة.
-- لا تذكر أنك نموذج ذكاء اصطناعي إلا إذا سُئلت مباشرة.
-- لا تستخدم عبارات مثل "لم أجد إجابة مناسبة" إذا كان بإمكانك تقديم إجابة مفيدة.
-
-القسم المختار:
-${data.section || "عام"}
-
-سؤال المستخدم:
-${question}
-`
-        }
-      ]
-    }
-  ]
-})
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ]
+      })
     }
   );
 
@@ -59,6 +63,7 @@ ${question}
 
   if (!response.ok) {
     console.error("Gemini API error:", data);
+
     throw new Error(
       data?.error?.message || "Gemini API request failed"
     );
@@ -106,12 +111,14 @@ const server = http.createServer((req, res) => {
 
   if (req.method !== "POST" || req.url !== "/api/gemini") {
     res.statusCode = 404;
+
     res.end(
       JSON.stringify({
         success: false,
         error: "Not found"
       })
     );
+
     return;
   }
 
@@ -124,22 +131,40 @@ const server = http.createServer((req, res) => {
   req.on("end", async () => {
     try {
       const data = JSON.parse(body);
-      const question = String(data.question || "").trim();
+
+      const question = String(
+        data.question || ""
+      ).trim();
+
+      const company = String(
+        data.company || "DXN"
+      ).trim();
+
+      const section = String(
+        data.section || "عام"
+      ).trim();
 
       if (!question) {
         res.statusCode = 400;
+
         res.end(
           JSON.stringify({
             success: false,
             error: "Question is required"
           })
         );
+
         return;
       }
 
-      const answer = await askGemini(question);
+      const answer = await askGemini(
+        question,
+        company,
+        section
+      );
 
       res.statusCode = 200;
+
       res.end(
         JSON.stringify({
           success: true,
@@ -151,10 +176,13 @@ const server = http.createServer((req, res) => {
       console.error("Backend error:", error);
 
       res.statusCode = 500;
+
       res.end(
         JSON.stringify({
           success: false,
-          error: error.message || "Internal server error"
+          error:
+            error.message ||
+            "Internal server error"
         })
       );
     }
