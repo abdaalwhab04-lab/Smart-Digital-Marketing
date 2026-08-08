@@ -1,133 +1,147 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>المساعد التسويقي الذكي | Smart Digital Marketing</title>  <link rel="stylesheet" href="style.css">
+</head><body>  <div class="chat-container"><!-- رأس المحادثة -->
+<header class="chat-header">
 
-<head>
+  <div class="bot-avatar">
+    🤖
+  </div>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <div class="header-text">
+    <h2>المساعد التسويقي الذكي</h2>
+    <span>Smart Digital Marketing</span>
+  </div>
 
-<title>Smart Marketing Assistant</title>
+  <div class="online-status">
+    <span></span>
+    متصل
+  </div>
 
-<link rel="stylesheet" href="style.css">
-
-</head>
-
-
-<body>
-
-
-<div class="container">
-
-
-<div class="header">
-
-<h2>🤖 المساعد التسويقي الذكي</h2>
-
-<p>Smart Marketing Assistant</p>
-
-</div>
+</header>
 
 
+<!-- معلومات الشركة -->
+<div class="settings-bar">
 
-<div class="box">
+  <div class="field">
+    <label for="company">الشركة</label>
 
+    <select id="company">
+      <option value="DXN">DXN</option>
+    </select>
+  </div>
 
-<label>🏢 الشركة</label>
+  <div class="field">
+    <label for="section">القسم</label>
 
-<select id="company">
+    <select id="section">
 
-<option value="DXN">
-DXN
-</option>
+      <option value="عام">
+        عام
+      </option>
 
-</select>
+      <option value="المنتجات">
+        المنتجات
+      </option>
 
+      <option value="فرصة العمل">
+        فرصة العمل
+      </option>
 
+      <option value="العضوية والتسجيل">
+        العضوية والتسجيل
+      </option>
 
-<label>📁 القسم</label>
-
-<select id="section">
-
-<option value="المنتجات">
-المنتجات
-</option>
-
-<option value="فرصة العمل">
-فرصة العمل
-</option>
-
-<option value="التسجيل">
-التسجيل
-</option>
-
-</select>
-
-
-
-<label>❓ السؤال</label>
-
-<input id="question"
-placeholder="اكتب سؤالك هنا">
-
-
-
-<button onclick="search()">
-🔍 بحث
-</button>
-
-
-
-<div class="answer" id="answer">
-
-الإجابة ستظهر هنا
+    </select>
+  </div>
 
 </div>
 
 
+<!-- منطقة المحادثة -->
+<main id="chatMessages" class="chat-messages">
+
+  <div class="message bot-message">
+
+    <div class="message-avatar">
+      🤖
+    </div>
+
+    <div class="message-content">
+
+      <div class="message-name">
+        المساعد التسويقي
+      </div>
+
+      <div class="message-bubble">
+        مرحباً بك 👋<br><br>
+        أنا المساعد التسويقي الذكي الخاص بموقع
+        <strong>Smart Digital Marketing</strong>.
+        <br><br>
+        يمكنك سؤالي عن شركة DXN أو المنتجات أو العضوية والتسجيل أو فرصة العمل.
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- منطقة الكتابة -->
+<div class="input-area">
+
+  <div class="input-wrapper">
+
+    <input
+      id="question"
+      type="text"
+      autocomplete="off"
+      placeholder="اكتب رسالتك هنا..."
+    >
+
+    <button
+      id="sendButton"
+      type="button"
+      aria-label="إرسال"
+    >
+      ➤
+    </button>
+
+  </div>
+
+  <div class="input-hint">
+    اضغط Enter لإرسال الرسالة
+  </div>
+
 </div>
 
 
+<!-- معلومات التواصل -->
+<div class="contact-bar">
 
+  <div>
+    <strong>رمز الراعي:</strong>
+    829134401
+  </div>
 
-<div class="contact">
+  <a
+    href="https://eworld.dxn2u.com/s/accreg/ar/829134401"
+    target="_blank"
+    rel="noopener"
+  >
+    التسجيل
+  </a>
 
-<h3>📞 التواصل</h3>
-
-<p>
-رمز الراعي: 829134401
-</p>
-
-
-<p>
-
-<a href="https://eworld.dxn2u.com/s/accreg/ar/829134401">
-رابط التسجيل
-</a>
-
-</p>
-
-
-<p>
-
-<a href="https://wa.me/218946098624">
-واتساب +218946098624
-</a>
-
-</p>
-
+  <a
+    href="https://wa.me/218946098624"
+    target="_blank"
+    rel="noopener"
+  >
+    واتساب
+  </a>
 
 </div>
 
-
-
-</div>
-
-
-
-<script src="../dxn-chat-core/utils.js"></script>
-<script src="script.js"></script>
-
-
-</body>
-
-</html>
+  </div>  <script src="../dxn-chat-core/utils.js"></script>  <script src="script.js"></script></body></html>
