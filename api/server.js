@@ -1,6 +1,4 @@
-/* Smart Digital Marketing - Gemini Backend
-   Phase 4.4
-*/
+/* Smart Digital Marketing - Gemini Backend */
 
 import http from "http";
 
@@ -60,7 +58,28 @@ async function askGemini(question) {
   return answer;
 }
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer((req, res) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://abdaalwhab04-lab.github.io"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "POST, OPTIONS"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type"
+  );
+
+  if (req.method === "OPTIONS") {
+    res.statusCode = 204;
+    res.end();
+    return;
+  }
+
   res.setHeader(
     "Content-Type",
     "application/json; charset=utf-8"
