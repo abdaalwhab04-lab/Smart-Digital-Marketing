@@ -313,17 +313,6 @@ function whatsappButton(text) {
    مربع الكتابة
 ========================= */
 
-function inputEl() {
-  return (
-    document.getElementById("user-input") ||
-    document.getElementById("userMessage")
-  );
-}
-
-/* =========================
-   البحث في قاعدة المعرفة
-========================= */
-
 function findAnswer(text, list) {
   const normalized =
     text.trim().toLowerCase();
