@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة أسئلة البوت</title>
+
+<style>
+body{
+font-family:Arial;
+direction:rtl;
+background:#f2f2f2;
+padding:20px;
+}
+
+.box{
+max-width:600px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+}
+
+input,textarea,button{
+width:100%;
+padding:10px;
+margin:8px 0;
+}
+
+button{
+background:#008cff;
+color:white;
+border:0;
+cursor:pointer;
+border-radius:5px;
+}
+
+.item{
+background:#eee;
+padding:10px;
+margin-top:10px;
+border-radius:5px;
+}
+
+.delete{
+background:#d9534f;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>إضافة سؤال للبوت</h2>
+
+<input id="question" placeholder="السؤال">
+
+<textarea id="answer" placeholder="الإجابة"></textarea>
+
+<button onclick="addQuestion()">حفظ السؤال</button>
+
+<p id="msg"></p>
+
+<h2>الأسئلة المحفوظة</h2>
+
+<div id="list"></div>
+
+</div>
+
+
+<script>
+
+function loadQuestions(){
+
+let questions =
+JSON.parse(localStorage.getItem("botQuestions")) || [];
+
+let list = document.getElementById("list");
+
+list.innerHTML="";
+
+
+questions.forEach((item,index)=>{
+
+list.innerHTML += `
+
+<div class="item">
+
+<b>السؤال:</b> ${item.question}
+<br>
+
+<b>الإجابة:</b> ${item.answer}
+
+<button class="delete" onclick="deleteQuestion(${index})">
+حذف
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+function addQuestion(){
+
+let question =
+document.getElementById("question").value.trim();
+
+let answer =
+document.getElementById("answer").value.trim();
+
+
+if(question==="" || answer===""){
+alert("أكمل البيانات");
+return;
+}
+
+
+let questions =
+JSON.parse(localStorage.getItem("botQuestions")) || [];
+
+
+questions.push({
+question:question,
+answer:answer
+});
+
+
+localStorage.setItem(
+"botQuestions",
+JSON.stringify(questions)
+);
+
+
+document.getElementById("msg").innerHTML =
+"تم الحفظ ✅";
+
+
+document.getElementById("question").value="";
+document.getElementById("answer").value="";
+
+
+loadQuestions();
+
+}
+
+
+
+function deleteQuestion(index){
+
+let questions =
+JSON.parse(localStorage.getItem("botQuestions")) || [];
+
+
+questions.splice(index,1);
+
+
+localStorage.setItem(
+"botQuestions",
+JSON.stringify(questions)
+);
+
+
+loadQuestions();
+
+}
+
+
+loadQuestions();
+
+</script>
+
+</body>
+</html>
